@@ -1,4 +1,4 @@
-# Satellite Demo 
+# Satellite Demo
 
 ## Requirements
 
@@ -15,12 +15,11 @@
 
 ### Modem Side
 
-Install the Maps server and then configure it to communicate with the modem.
+Install the Maps Server and configure it to communicate with the modem.
 
-In the **NetworkConnectionManager.yaml** add this to the **data** section.
+In **NetworkConnectionManager.yaml**, add this to the **data** section:
 
 ```yaml
-
       - name: "ST2100 Modem"
         url: serial://localhost:0/
         protocol: stogi
@@ -57,10 +56,9 @@ In the **NetworkConnectionManager.yaml** add this to the **data** section.
           flowControl: 0
 ```
 
-Please not the **port** should match your communications port to use. Maps should autodetect the version of the modem to use.
+Please note the **port** should match the communications port you intend to use. Maps will attempt to autodetect the modem version.
 
-
-To then configure the weather statistics events to be processed and sent add
+To configure the weather statistics events to be processed and sent, add:
 
 ```yaml
       - name: "Weather stats upload"
@@ -81,12 +79,11 @@ To then configure the weather statistics events to be processed and sent add
               defaultAnalyser: "Advanced"
 ```
 
-This informs the server to subscribe to the **/weather** topic, process the events using the **Advanced** analyser and forward an event after every 60 events.
+This instructs the server to subscribe to the **/weather** topic, process the events using the **Advanced** analyser, and forward an event after every 60 events.
 
-> A complete NetworkConnectionManager.yaml can be found in main/resources/modem_side
+> A complete `NetworkConnectionManager.yaml` can be found in `main/resources/modem_side`.
 
-
-We also need to adjust which port the MQTT server binds to, in **NetworkManager.yaml**
+We also need to adjust the MQTT port in **NetworkManager.yaml**:
 
 ```yaml
       - name: "MQTT Interface"
@@ -96,40 +93,43 @@ We also need to adjust which port the MQTT server binds to, in **NetworkManager.
         selectorThreadCount: "{processors}/2"
 ```
 
-The port change from 1883 ( default ) to 1884 matches the Weather Station simulation.
+Changing from port **1883** to **1884** matches the Weather Station simulation setup.
 
-> A complete NetworkManager.yaml can be found in the main/resources/modem_side 
+> A complete `NetworkManager.yaml` can be found in `main/resources/modem_side`.
 
+Once configured, start the server.
 
-Once configured start the server
-
+---
 
 ### Weather Station Simulator
 
-This package has a simple Weather Station simulator that 
+This package includes a simple Weather Station simulator that:
 
-- Sets the topics schemas
-- Publish updates once a second to /weather
+- Sets the topic schemas
+- Publishes updates once per second to `/weather`
 
-If the server is stopped the simulator will exit.
+If the server stops, the simulator will exit.
 
-#### Starting Weather Station Simulator
+#### Starting the Weather Station Simulator
 
-You will need maven installed and then simply
+Ensure Maven is installed, then run:
 
 ```shell
 mvn exec:java -Dexec.mainClass=io.mapsmessaging.weather.WeatherGeneratorDemo
 ```
 
-It will connect to tcp://localhost:1884/, if you need another host/port simply change the code and run again
+It will connect to `tcp://localhost:1884/`.  
+If you need a different host or port, modify the code and run again.
+
+---
 
 ### Server Side
 
 #### Modem Simulator
 
-If running the modem simulator then we will need to configure the server to use the **ogws** API. 
+If running the modem simulator, the server must be configured to use the **ogws** API.
 
-In the NetworkManager.yaml add
+Add this to **NetworkManager.yaml**:
 
 ```yaml
       - name: "ogws interface"
@@ -151,17 +151,13 @@ In the NetworkManager.yaml add
 ```
 
 #### Satellite Comms Emulation
-If running the agent from this repo then we use the **Inmarsat IoT interface**
-
-In the NetworkManager.yaml add
+If running the agent from this repo, use the **Inmarsat IoT interface**:
 
 ```yaml
-
       - name: "inmarsat IoT interface"
         auth: anon
         protocol: satellite
         url: satellite://localhost:8500/
-
 
         # Rest Server Config
         baseUrl: "http://localhost:8085/iotMessaging/v1"
@@ -171,12 +167,11 @@ In the NetworkManager.yaml add
         remoteAuthConfig:
           username: "ogws client id"
           password: "ogws client secret"
+
         # Timeouts
         incomingMessagePollInterval: 10
         outgoingMessagePollInterval: 30
         httpRequestTimeoutSec: 30
-
-
 
         # Maps message package config
         bridgeMode: false
@@ -187,24 +182,20 @@ In the NetworkManager.yaml add
         outboundNamespaceRoot: "/inmarsat/{deviceId}"
         outboundBroadcast: "/inmarsat/broadcast"
         namespaceRoot: "/{mailboxId}/{deviceId}/{sin}"
-
 ```
 
+#### Starting the Emulator
 
-#### Starting the emulator
-
-To start the built in Modem / Web Server emulation simply run
+To start the built‑in modem and web server emulation, run:
 
 ```shell
-mvn -pl maps_viasat_harness \
-  exec:java@run-satellite-comms \
-  -Dexec.args="/dev/ttyUSB0 8085" \
-  -DMODEM_LOG_MESSAGES=true
+mvn -pl maps_viasat_harness   exec:java@run-satellite-comms   -Dexec.args="/dev/ttyUSB0 8085"   -DMODEM_LOG_MESSAGES=true
 ```
 
-adjust the com port and the tcp port accordingly. 
+Adjust the COM port and TCP port accordingly.
 
+---
 
-#### Other
-If running against a live server then please refer to your documentation regarding the type and authentication required.
+### Other
 
+If running against a live server, refer to the documentation appropriate to your modem type and authentication method.
