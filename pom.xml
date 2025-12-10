@@ -100,6 +100,15 @@
                             <mainClass>io.mapsmessaging.weather.WeatherGeneratorDemo</mainClass>
                         </configuration>
                     </execution>
+                    <execution>
+                        <id>run-satellite-comms</id>
+                        <goals>
+                            <goal>java</goal>
+                        </goals>
+                        <configuration>
+                            <mainClass>io.mapsmessaging.satellite.SatelliteComms</mainClass>
+                        </configuration>
+                    </execution>
                 </executions>
             </plugin>
 

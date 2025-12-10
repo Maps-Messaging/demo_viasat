@@ -191,6 +191,20 @@ In the NetworkManager.yaml add
 ```
 
 
+#### Starting the emulator
+
+To start the built in Modem / Web Server emulation simply run
+
+```shell
+mvn -pl maps_viasat_harness \
+  exec:java@run-satellite-comms \
+  -Dexec.args="/dev/ttyUSB0 8085" \
+  -DMODEM_LOG_MESSAGES=true
+```
+
+adjust the com port and the tcp port accordingly. 
+
+
 #### Other
 If running against a live server then please refer to your documentation regarding the type and authentication required.
 
