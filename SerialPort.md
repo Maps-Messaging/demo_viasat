@@ -75,8 +75,8 @@ Adapter A GND ↔ Adapter B GND
 - This creates a perfect software‑only “virtual cable” for testing serial code.
 
 ### Example Pinout for FTDI Friend
-| FTDI Pin | Connects To |
-|----------|-------------|
+| FTDI Pin | Connects To       |
+|----------|-------------------|
 | GND      | Other Adapter GND |
 | TXO      | Other Adapter RXI |
 | RXI      | Other Adapter TXO |
