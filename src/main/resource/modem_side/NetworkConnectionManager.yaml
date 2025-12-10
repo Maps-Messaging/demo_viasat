@@ -1,0 +1,109 @@
+#
+# Copyright [ 2020 - 2024 ] [Matthew Buckton]
+# Copyright [ 2024 - 2025 ] [Maps Messaging B.V.]
+#
+#   Licensed under the Apache License, Version 2.0 (the "License");
+#   you may not use this file except in compliance with the License.
+#   You may obtain a copy of the License at
+#
+#       http://www.apache.org/licenses/LICENSE-2.0
+#
+#   Unless required by applicable law or agreed to in writing, software
+#   distributed under the License is distributed on an "AS IS" BASIS,
+#   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+#   See the License for the specific language governing permissions and
+#   limitations under the License.
+#
+
+---
+NetworkConnectionManager:
+    global:
+        selector_pool_size: 5
+
+        # ---------------------------------------------------------------------------------------------------------
+        # tcp layer configuration
+        # ---------------------------------------------------------------------------------------------------------
+        receiveBufferSize: 1M
+        sendBufferSize: 1M
+        timeout: 60000
+
+        readDelayOnFragmentation: 100
+        enableReadDelayOnFragmentation: true
+
+        # ---------------------------------------------------------------------------------------------------------
+        # Generic protocol configuration
+        # ---------------------------------------------------------------------------------------------------------
+        serverReadBufferSize:  1M
+        serverWriteBufferSize: 1M
+        selectorThreadCount  : 5
+
+        security:
+          tls:
+            context: TLSv1.3
+            clientCertificateRequired: false
+            clientCertificateWanted: false
+            keyStore:
+              type: JKS
+              managerFactory: SunX509
+              path: D:\certs\certs\loragateway01\loragateway01.jks
+              passphrase: changeit
+            trustStore:
+              type: JKS
+              path: D:\certs\ca\truststore.jks
+              passphrase: changeit
+              managerFactory: SunX509
+
+    data:
+      - name: "Weather stats upload"
+        url: loop://localhost:0/
+        protocol: loop
+        remote:
+          sessionId: "internal sessionid"                  # not required for this link
+          username: ""
+          password: ""
+        links:
+          -
+            direction: push
+            local_namespace: "/weather"
+            remote_namespace: "/report/weather"
+            analystics:
+              eventCount: 60
+              ignoreList: "timestamp"
+              defaultAnalyser: "Advanced"
+
+
+
+      - name: "ST2100 Modem"
+        url: serial://localhost:0/
+        protocol: stogi
+        initialSetup: ""                         # optional init string sent at startup
+        incomingMessagePollInterval: 1           # seconds, minimum = 1
+        outgoingMessagePollInterval: 20          # seconds, minimum = 15 recommended
+        sharedSecret: "This is a shared secret to use"
+        sendHighPriorityMessages: false
+        modemResponseTimeout: 20000              # ms
+        locationPollInterval: 60                 # seconds, GNSS/visibility state updates
+        maxBufferSize: 4000
+        compressionCutoffSize: 128
+        modemStatsTopic: "/modem/stats"
+        modemRawMessages: "/incoming/{sin}/{min}"  # Any raw events will be published to incoming and split on sin/min
+        bridgeMode: false                        # if true, send raw byte[] with no modifications
+
+        remote:
+          sessionId: <optional>                  # not required for this link
+          username: <optional>
+          password: <optional>
+
+        links:
+          - direction: push
+            local_namespace: "/report/weather"
+            remote_namespace: "/remote/report/weather"
+            include_schema: true
+
+        serial:
+          port: "com6"
+          baudRate: 9600
+          dataBits: 8
+          stopBits: 1
+          parity: n
+          flowControl: 0

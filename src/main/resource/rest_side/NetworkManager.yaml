@@ -1,0 +1,178 @@
+#
+# Copyright [ 2020 - 2024 ] [Matthew Buckton]
+# Copyright [ 2024 - 2025 ] [Maps Messaging B.V.]
+#
+#   Licensed under the Apache License, Version 2.0 (the "License");
+#   you may not use this file except in compliance with the License.
+#   You may obtain a copy of the License at
+#
+#       http://www.apache.org/licenses/LICENSE-2.0
+#
+#   Unless required by applicable law or agreed to in writing, software
+#   distributed under the License is distributed on an "AS IS" BASIS,
+#   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+#   See the License for the specific language governing permissions and
+#   limitations under the License.
+#
+
+---
+NetworkManager:
+    global:
+
+      # ---------------------------------------------------------------------------------------------------------
+      # tcp layer configuration
+      # ---------------------------------------------------------------------------------------------------------
+      receiveBufferSize: 128000
+      sendBufferSize: 128000
+      timeout: 60000
+      backlog: 100
+      soLingerDelaySec: 10
+      readDelayOnFragmentation: 100
+      fragmentationLimit: 5
+      enableReadDelayOnFragmentation: true
+
+      # ---------------------------------------------------------------------------------------------------------
+      # Generic protocol configuration
+      # ---------------------------------------------------------------------------------------------------------
+      serverReadBufferSize: 100K
+      serverWriteBufferSize: 100K
+      selectorThreadCount: 10
+
+      # ---------------------------------------------------------------------------------------------------------
+      # MQTT Protocol configuration
+      # ---------------------------------------------------------------------------------------------------------
+      maximumSessionExpiry: 86400
+      maximumBufferSize: 10M
+      serverReceiveMaximum: 10
+      clientReceiveMaximum: 65535
+      clientMaximumTopicAlias: 32767
+      serverMaximumTopicAlias: 0
+      strictClientId: false
+
+      # ---------------------------------------------------------------------------------------------------------
+      # MQTT 5.0 specific
+      # ---------------------------------------------------------------------------------------------------------
+      minServerKeepAlive: 0
+      maxServerKeepAlive: 60
+
+      # ---------------------------------------------------------------------------------------------------------
+      # LoRa Gateway specific
+      # ---------------------------------------------------------------------------------------------------------
+      # Maximum Packets per second limit to ensure the radio isn't flooded
+      LoRaMaxTransmissionRate: 20
+
+      # ---------------------------------------------------------------------------------------------------------
+      # MQTT-SN specific configuration
+      # ---------------------------------------------------------------------------------------------------------
+      maxInFlightEvents: 1
+      dropQoS0Events: true
+      eventQueueTimeout: 0
+      advertiseGateway: false
+      enablePortChanges: true
+      enableAddressChanges: true
+      packetReuseTimeout: 1000
+
+      # ---------------------------------------------------------------------------------------------------------
+      # Global configuration
+      # ---------------------------------------------------------------------------------------------------------
+      discoverable: true             # If the server registers a mdns entry for the adapter
+      preferIPv6Addresses: true      # If the server should prefer IPv6 addresses over IPv4 addresses
+      scanNetworkChanges: true      # If true, the server will scan for new interfaces or disconnected interfaces
+      scanInterval: 60000            # Time in milliseconds to scan for network changes
+
+        # ---------------------------------------------------------------------------------------------------------
+        # Global configuration for SSL
+        # ---------------------------------------------------------------------------------------------------------
+      security:
+        tls:
+          clientCertificateRequired: false
+          clientCertificateWanted: false
+            #-----------------------------------
+            # CRL Specific
+            # crlUrl: <URL TO CRL>
+            # crlInterval: <time in seconds to reload CRL>
+            #-----------------------------------
+
+          keyStore:
+            type: JKS
+            managerFactory: SunX509
+            path: my-keystore.jks
+            passphrase: password
+
+          trustStore:
+            type: JKS
+            path: my-truststore.jks
+            passphrase: password
+            managerFactory: SunX509
+
+        dtls:
+          clientCertificateRequired: false
+
+          keyStore:
+            type: JKS
+            managerFactory: SunX509
+            path: my-keystore.jks
+            passphrase: password
+
+          trustStore:
+            type: JKS
+            path: my-truststore.jks
+            passphrase: password
+            managerFactory: SunX509
+
+    data:
+
+      - name: "MQTT Interface"
+        url: tcp://:::1883/
+        protocol: mqtt
+        auth: default
+        selectorThreadCount: "{processors}/2"
+
+      - name: "ogws interface"
+        protocol: satellite
+        auth: anon
+        bridgeMode: false
+        url: satellite://localhost:8500/
+        httpRequestTimeoutSec: 30
+        pollInterval: 15
+        sharedSecret: "This is a shared secret to use"
+        maxInflightEventsPerDevice: 2
+        outboundNamespaceRoot: "/inmarsat/{deviceId}"
+        outboundBroadcast: "/inmarsat/broadcast"
+        baseUrl: "http://localhost:8085/api/v1.0"
+        remoteAuthConfig:
+          username: "ogws client id"
+          password: "ogws client secret"
+        namespaceRoot: "/{deviceId}/"
+
+#      - name: "inmarsat IoT interface"
+#        auth: anon
+#        protocol: satellite
+#        url: satellite://localhost:8500/
+
+
+#        # Rest Server Config
+#        baseUrl: "http://localhost:8085/iotMessaging/v1"
+#        mailboxId: "mailbox-001"
+#        mailboxPassword: "mailbox-secret"
+
+#        remoteAuthConfig:
+#          username: "ogws client id"
+#          password: "ogws client secret"
+        # Timeouts
+#        incomingMessagePollInterval: 10
+#        outgoingMessagePollInterval: 30
+#        httpRequestTimeoutSec: 30
+
+
+
+        # Maps message package config
+#        bridgeMode: false
+#        sharedSecret: "This is a shared secret to use"
+#        maxInflightEventsPerDevice: 2
+
+        # Namespace mapping
+ #       outboundNamespaceRoot: "/inmarsat/{deviceId}"
+ #       outboundBroadcast: "/inmarsat/broadcast"
+ #       namespaceRoot: "/{mailboxId}/{deviceId}/{sin}"
+
