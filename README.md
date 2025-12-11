@@ -146,13 +146,15 @@ Add this to **NetworkManager.yaml**:
         pollInterval: 15
         sharedSecret: "This is a shared secret to use"
         maxInflightEventsPerDevice: 2
-        outboundNamespaceRoot: "/inmarsat/{deviceId}"
+        namespaceRoot: "/{deviceId}"
+        inboundNamespaceRoot: "/incoming/{deviceId}/{sin}/{min}"
+        outboundNamespaceRoot: "/outgoing/{deviceId}/#"
         outboundBroadcast: "/inmarsat/broadcast"
         baseUrl: "http://localhost:8085/api/v1.0"
         remoteAuthConfig:
           username: "ogws client id"
           password: "ogws client secret"
-        namespaceRoot: "/{deviceId}/"
+
 ```
 
 #### Satellite Comms Emulation
@@ -184,9 +186,10 @@ If running the agent from this repo, use the **Inmarsat IoT interface**:
         maxInflightEventsPerDevice: 2
 
         # Namespace mapping
-        outboundNamespaceRoot: "/inmarsat/{deviceId}"
+        namespaceRoot: "/{deviceId}"
+        inboundNamespaceRoot: "/incoming/{deviceId}/{sin}/{min}"
+        outboundNamespaceRoot: "/outgoing/{deviceId}/#"
         outboundBroadcast: "/inmarsat/broadcast"
-        namespaceRoot: "/{mailboxId}/{deviceId}/{sin}"
 ```
 
 #### Starting the Emulator

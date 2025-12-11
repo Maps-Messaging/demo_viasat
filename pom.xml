@@ -109,6 +109,25 @@
                             <mainClass>io.mapsmessaging.satellite.SatelliteComms</mainClass>
                         </configuration>
                     </execution>
+                    <execution>
+                        <id>run-common-requester</id>
+                        <goals>
+                            <goal>java</goal>
+                        </goals>
+                        <configuration>
+                            <mainClass>io.mapsmessaging.client.CommonRequestClient</mainClass>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>run-common-responder</id>
+                        <goals>
+                            <goal>java</goal>
+                        </goals>
+                        <configuration>
+                            <mainClass>io.mapsmessaging.client.CommonResponseClient</mainClass>
+                        </configuration>
+                    </execution>
+
                 </executions>
             </plugin>
 

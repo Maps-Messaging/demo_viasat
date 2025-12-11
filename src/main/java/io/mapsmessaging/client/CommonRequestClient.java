@@ -17,7 +17,7 @@ public class CommonRequestClient {
     client = new MqttClientConnection("tcp://localhost:1883", "CommonRequestClient");
     deviceId = "00000000SKYEE3D";
 
-    for(int x=0;x< 10;x++){
+    while(true){
       Thread.sleep(30000);
       sendPositionRequest();
       Thread.sleep(30000);
@@ -48,7 +48,11 @@ public class CommonRequestClient {
 
 
   public static void main(String[] args) throws MqttException, InterruptedException {
-    CommonRequestClient commonRequestClient = new CommonRequestClient();
+    try {
+      CommonRequestClient commonRequestClient = new CommonRequestClient();
+    } catch (Throwable e) {
+      e.printStackTrace();
+    }
     System.exit(0);
   }
 
