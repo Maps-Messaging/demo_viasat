@@ -127,7 +127,15 @@
                             <mainClass>io.mapsmessaging.client.CommonResponseClient</mainClass>
                         </configuration>
                     </execution>
-
+                    <execution>
+                        <id>run-central-pubisher</id>
+                        <goals>
+                            <goal>java</goal>
+                        </goals>
+                        <configuration>
+                            <mainClass>io.mapsmessaging.control.CentralControl</mainClass>
+                        </configuration>
+                    </execution>
                 </executions>
             </plugin>
 
