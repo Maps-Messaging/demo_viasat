@@ -2,6 +2,11 @@
 
 ## Requirements
 
+The event flow for this demo is as follows
+
+client ⇆ Maps Server ⇆ [ Satellite Modem (serial) | Web Server (REST) ] ⇆ Maps Server ⇆ client
+
+
 ### Maps Messaging Components
 - Maps Server configured to communicate with the satellite modem
 - Maps Server configured to communicate with the REST API

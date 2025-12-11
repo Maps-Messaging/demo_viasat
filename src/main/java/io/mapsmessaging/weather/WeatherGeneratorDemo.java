@@ -2,18 +2,16 @@ package io.mapsmessaging.weather;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import common.MqttClientConnection;
 import lombok.SneakyThrows;
-import org.eclipse.paho.client.mqttv3.MqttClient;
-import org.eclipse.paho.client.mqttv3.MqttConnectOptions;
 import org.eclipse.paho.client.mqttv3.MqttException;
 import org.eclipse.paho.client.mqttv3.MqttMessage;
-import org.eclipse.paho.client.mqttv3.persist.MemoryPersistence;
 
 import java.time.Instant;
 
 public class WeatherGeneratorDemo implements Runnable{
 
-  private MqttClient client;
+  private MqttClientConnection client;
   private final  WeatherSample initial;
   private final WeatherGenerator generator;
 
@@ -36,20 +34,9 @@ public class WeatherGeneratorDemo implements Runnable{
   }
 
   public void connect() throws MqttException {
-    MqttConnectOptions options = getOptions();
-    client = new MqttClient("tcp://localhost:1884", "weatherStation", new MemoryPersistence());
-    client.connect(options);
+    client = new MqttClientConnection("tcp://localhost:1884", "weatherStation");
   }
 
-  public MqttConnectOptions getOptions() {
-    MqttConnectOptions options = new MqttConnectOptions();
-    options.setMqttVersion(4); // 3.1.1
-    options.setExecutorServiceTimeout(20000);
-    options.setConnectionTimeout(20000);
-    options.setCleanSession(true);
-    options.setAutomaticReconnect(true);
-    return options;
-  }
 
   // Sets the schema for both topics as json
   public void updateSchemas() throws MqttException {
