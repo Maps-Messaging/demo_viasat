@@ -9,6 +9,8 @@ import org.eclipse.paho.client.mqttv3.MqttMessage;
 
 import java.time.Instant;
 
+import static common.Configuration.MODEM_MQTT_URL;
+
 public class WeatherGeneratorDemo implements Runnable{
 
   private MqttClientConnection client;
@@ -34,7 +36,7 @@ public class WeatherGeneratorDemo implements Runnable{
   }
 
   public void connect() throws MqttException {
-    client = new MqttClientConnection("tcp://localhost:1884", "weatherStation");
+    client = new MqttClientConnection(MODEM_MQTT_URL, "weatherStation");
   }
 
 

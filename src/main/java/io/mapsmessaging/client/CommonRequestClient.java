@@ -8,13 +8,15 @@ import io.mapsmessaging.client.messages.Requests;
 import org.eclipse.paho.client.mqttv3.MqttException;
 import org.eclipse.paho.client.mqttv3.MqttMessage;
 
+import static common.Configuration.WEB_MQTT_URL;
+
 public class CommonRequestClient {
-  private MqttClientConnection client;
+  private final MqttClientConnection client;
   private String deviceId;
 
 
   public CommonRequestClient() throws MqttException, InterruptedException {
-    client = new MqttClientConnection("tcp://localhost:1883", "CommonRequestClient");
+    client = new MqttClientConnection(WEB_MQTT_URL, CommonRequestClient.class.getSimpleName());
     deviceId = "00000000SKYEE3D";
 
     while(true){

@@ -4,13 +4,15 @@ import common.MqttClientConnection;
 import io.mapsmessaging.client.listeners.DirectoryResponse;
 import org.eclipse.paho.client.mqttv3.MqttException;
 
+import static common.Configuration.MODEM_MQTT_URL;
+
 
 public class CommonResponseClient {
 
-  private MqttClientConnection client;
+  private final MqttClientConnection client;
 
   public CommonResponseClient() throws MqttException {
-    client = new MqttClientConnection("tcp://localhost:1884", "CommonResponseClient");
+    client = new MqttClientConnection(MODEM_MQTT_URL, CommonResponseClient.class.getSimpleName());
     client.subscribe("/incoming/24/3", new DirectoryResponse(client));
   }
 
