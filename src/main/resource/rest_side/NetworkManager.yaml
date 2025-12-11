@@ -137,13 +137,15 @@ NetworkManager:
         pollInterval: 15
         sharedSecret: "This is a shared secret to use"
         maxInflightEventsPerDevice: 2
-        outboundNamespaceRoot: "/inmarsat/{deviceId}"
+        outboundNamespaceRoot: "/outgoing/{deviceId}/#"
         outboundBroadcast: "/inmarsat/broadcast"
         baseUrl: "http://localhost:8085/api/v1.0"
         remoteAuthConfig:
           username: "ogws client id"
           password: "ogws client secret"
-        namespaceRoot: "/{deviceId}/"
+        namespaceRoot: "/incoming/{deviceId}/{sin}/{min}"
+
+
 
 #      - name: "inmarsat IoT interface"
 #        auth: anon

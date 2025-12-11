@@ -86,8 +86,10 @@ NetworkConnectionManager:
         maxBufferSize: 4000
         compressionCutoffSize: 128
         modemStatsTopic: "/modem/stats"
-        modemRawMessages: "/incoming/{sin}/{min}"  # Any raw events will be published to incoming and split on sin/min
-        bridgeMode: false                        # if true, send raw byte[] with no modifications
+        modemRawRequest: "/incoming/{sin}/{min}"  # Any raw events will be published to incoming and split on sin/min
+        modemRawResponse: "/outbound"            # Any messages from clients will be sent directly to the modem
+        bridgeMode: false                          # if true, send raw byte[] with no modifications
+
 
         remote:
           sessionId: <optional>                  # not required for this link
