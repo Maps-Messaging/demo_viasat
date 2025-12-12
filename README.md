@@ -18,6 +18,18 @@ client ⇆ Maps Server ⇆ [ Satellite Modem (serial) | Web Server (REST) ] ⇆ 
 
 ## Configuration
 
+To disable Auth while testing edit the AuthManager.yaml file, located in $MAPS_HOME/conf/AuthManager.yaml 
+
+```yaml
+---
+AuthManager:
+  authenticationEnabled: false  # connections will be authorised according to the config
+  authorizationEnabled: false   # Requests will be authorised according to the access control list for the resource
+```
+
+It will make getting it setup easier to start with. Do not run in on a server connected to the Internet.
+
+
 ### Modem Side
 
 Install the Maps Server and configure it to communicate with the modem.

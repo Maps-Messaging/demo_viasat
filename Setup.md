@@ -73,3 +73,44 @@ This setup demonstrates:
 - How periodic telemetry aggregation works on the modem side
 - How MQTT agents operate on both edges of the satellite network
 - Full end-to-end visibility of message routing through the simulated environment
+
+
+### Hardware layout Diagram
+
+```mermaid
+flowchart LR
+  %% Edge side (Raspberry Pi)
+  subgraph EDGE["Edge Site – Raspberry Pi"]
+    WMQTT["MQTT Client: Weather Data"]
+    RMQTT["MQTT Client: Message Responder"]
+    MAPSPI["Maps Server (Pi)"]
+  end
+
+  %% Satellite / modem simulator
+  subgraph SAT["Satellite Modem / Simulator"]
+    MODEM["ST2100 / Modem Simulator"]
+  end
+
+  %% Core side (Ubuntu)
+  subgraph CORE["Core Site – Ubuntu"]
+    MAPSCORE["Maps Server (Ubuntu)"]
+    POSREQ["MQTT Client: Modem Position + Directory Requests"]
+    EVTSRC["MQTT Client: Random MAPS MQTT Events Sender"]
+  end
+
+  %% MQTT wiring on Pi (only to Pi Maps)
+  WMQTT -->|"MQTT"| MAPSPI
+  RMQTT -->|"MQTT"| MAPSPI
+
+  %% Pi Maps <-> Modem (serial)
+  MAPSPI <-->|"ST-OGI / serial"| MODEM
+
+  %% Modem simulator <-> Ubuntu Maps
+  MODEM <-->|"ST-OGI / Rest API"| MAPSCORE
+
+  %% MQTT wiring on Ubuntu (only to Ubuntu Maps)
+  POSREQ -->|"MQTT: Position & Directory Requests"| MAPSCORE
+  EVTSRC -->|"MQTT: Random Events"| MAPSCORE
+
+
+```
