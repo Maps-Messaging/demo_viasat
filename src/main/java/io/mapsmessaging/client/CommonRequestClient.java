@@ -20,11 +20,10 @@ public class CommonRequestClient {
     deviceId = "00000000SKYEE3D";
 
     while(true){
+      sendDirectoryRequest();
       Thread.sleep(30000);
       sendPositionRequest();
       Thread.sleep(30000);
-      sendDirectoryRequest();
-
     }
   }
 
@@ -38,13 +37,13 @@ public class CommonRequestClient {
 
 
   private void sendRequest(Requests request) throws MqttException {
-
+    int min = request.getMin();
+    int sin = request.getSin();
     MqttMessage message = new MqttMessage();
     message.setQos(0);
     message.setRetained(false);
     message.setPayload(request.getRequest());
-    client.publish("/outgoing/"+deviceId+"/request", message);
-
+    client.publish("/"+deviceId+"/common/out/"+sin+"/"+min, message);
   }
 
 

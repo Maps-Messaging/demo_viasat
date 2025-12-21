@@ -27,7 +27,7 @@ public class CentralControl {
   }
 
   public void sendToSpecific(String deviceId, String message) throws MqttException {
-    client.publish("/outgoing/"+deviceId, message.getBytes(StandardCharsets.UTF_8));
+    client.publish("/"+deviceId+"/maps/out", message.getBytes(StandardCharsets.UTF_8));
   }
 
   public static void main(String[] args) throws MqttException, InterruptedException {

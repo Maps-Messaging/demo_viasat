@@ -58,7 +58,7 @@ public class WeatherGeneratorDemo implements Runnable{
       message.setRetained(true);
       message.setQos(0);
       try {
-        client.publish("/weather", message);
+        client.publish("/report/weather", message);
       } catch (MqttException e) {
         e.printStackTrace();
         System.exit(0);

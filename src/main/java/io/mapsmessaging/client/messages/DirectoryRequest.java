@@ -8,8 +8,8 @@ public class DirectoryRequest implements Requests{
   public DirectoryRequest(String path){
     int len = 3+path.length();
     request = new byte[len];
-    request[0] = (byte) 24;
-    request[1] = (byte) 3;
+    request[0] = getSin();
+    request[1] = getMin();
     request[2] = (byte) path.length();
     System.arraycopy(path.getBytes(),0,request,3,path.length());
   }
@@ -17,5 +17,15 @@ public class DirectoryRequest implements Requests{
   @Override
   public byte[] getRequest() {
     return request;
+  }
+
+  @Override
+  public byte getSin() {
+    return 24;
+  }
+
+  @Override
+  public byte getMin() {
+    return 3;
   }
 }

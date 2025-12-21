@@ -36,7 +36,7 @@ NetworkManager:
       # ---------------------------------------------------------------------------------------------------------
       serverReadBufferSize: 100K
       serverWriteBufferSize: 100K
-      selectorThreadCount: 10
+      selectorThreadCount: 4
 
       # ---------------------------------------------------------------------------------------------------------
       # MQTT Protocol configuration
@@ -55,22 +55,6 @@ NetworkManager:
       minServerKeepAlive: 0
       maxServerKeepAlive: 60
 
-      # ---------------------------------------------------------------------------------------------------------
-      # LoRa Gateway specific
-      # ---------------------------------------------------------------------------------------------------------
-      # Maximum Packets per second limit to ensure the radio isn't flooded
-      LoRaMaxTransmissionRate: 20
-
-      # ---------------------------------------------------------------------------------------------------------
-      # MQTT-SN specific configuration
-      # ---------------------------------------------------------------------------------------------------------
-      maxInFlightEvents: 1
-      dropQoS0Events: true
-      eventQueueTimeout: 0
-      advertiseGateway: false
-      enablePortChanges: true
-      enableAddressChanges: true
-      packetReuseTimeout: 1000
 
       # ---------------------------------------------------------------------------------------------------------
       # Global configuration
@@ -80,49 +64,10 @@ NetworkManager:
       scanNetworkChanges: true      # If true, the server will scan for new interfaces or disconnected interfaces
       scanInterval: 60000            # Time in milliseconds to scan for network changes
 
-        # ---------------------------------------------------------------------------------------------------------
-        # Global configuration for SSL
-        # ---------------------------------------------------------------------------------------------------------
-      security:
-        tls:
-          clientCertificateRequired: false
-          clientCertificateWanted: false
-            #-----------------------------------
-            # CRL Specific
-            # crlUrl: <URL TO CRL>
-            # crlInterval: <time in seconds to reload CRL>
-            #-----------------------------------
-
-          keyStore:
-            type: JKS
-            managerFactory: SunX509
-            path: my-keystore.jks
-            passphrase: password
-
-          trustStore:
-            type: JKS
-            path: my-truststore.jks
-            passphrase: password
-            managerFactory: SunX509
-
-        dtls:
-          clientCertificateRequired: false
-
-          keyStore:
-            type: JKS
-            managerFactory: SunX509
-            path: my-keystore.jks
-            passphrase: password
-
-          trustStore:
-            type: JKS
-            path: my-truststore.jks
-            passphrase: password
-            managerFactory: SunX509
 
     data:
 
-      - name: "MQTT Interface"
+      - name: "MQTT Interface on 1884"
         url: tcp://:::1884/
         protocol: mqtt
         auth: default

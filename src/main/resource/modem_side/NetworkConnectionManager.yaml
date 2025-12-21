@@ -37,21 +37,6 @@ NetworkConnectionManager:
         serverWriteBufferSize: 1M
         selectorThreadCount  : 5
 
-        security:
-          tls:
-            context: TLSv1.3
-            clientCertificateRequired: false
-            clientCertificateWanted: false
-            keyStore:
-              type: JKS
-              managerFactory: SunX509
-              path: D:\certs\certs\loragateway01\loragateway01.jks
-              passphrase: changeit
-            trustStore:
-              type: JKS
-              path: D:\certs\ca\truststore.jks
-              passphrase: changeit
-              managerFactory: SunX509
 
     data:
       - name: "Weather stats upload"
@@ -72,7 +57,9 @@ NetworkConnectionManager:
               defaultAnalyser: "Advanced"
 
 
-
+#
+# Modem Configuration
+#
       - name: "ST2100 Modem"
         url: serial://localhost:0/
         protocol: stogi

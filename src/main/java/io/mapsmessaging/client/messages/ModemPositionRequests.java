@@ -6,12 +6,22 @@ public class ModemPositionRequests implements Requests{
 
   public ModemPositionRequests() {
     request = new byte[2];
-    request[0] = (byte) 0; // Modem
-    request[1] = (byte) 72; // Get Position
+    request[0] = getSin(); // Modem
+    request[1] = getMin(); // Get Position
   }
 
   @Override
   public byte[] getRequest() {
     return request;
+  }
+
+  @Override
+  public byte getSin() {
+    return 0;
+  }
+
+  @Override
+  public byte getMin() {
+    return 72;
   }
 }

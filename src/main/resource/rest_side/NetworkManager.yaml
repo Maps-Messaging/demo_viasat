@@ -36,7 +36,7 @@ NetworkManager:
       # ---------------------------------------------------------------------------------------------------------
       serverReadBufferSize: 100K
       serverWriteBufferSize: 100K
-      selectorThreadCount: 10
+      selectorThreadCount: 4
 
       # ---------------------------------------------------------------------------------------------------------
       # MQTT Protocol configuration
@@ -56,23 +56,6 @@ NetworkManager:
       maxServerKeepAlive: 60
 
       # ---------------------------------------------------------------------------------------------------------
-      # LoRa Gateway specific
-      # ---------------------------------------------------------------------------------------------------------
-      # Maximum Packets per second limit to ensure the radio isn't flooded
-      LoRaMaxTransmissionRate: 20
-
-      # ---------------------------------------------------------------------------------------------------------
-      # MQTT-SN specific configuration
-      # ---------------------------------------------------------------------------------------------------------
-      maxInFlightEvents: 1
-      dropQoS0Events: true
-      eventQueueTimeout: 0
-      advertiseGateway: false
-      enablePortChanges: true
-      enableAddressChanges: true
-      packetReuseTimeout: 1000
-
-      # ---------------------------------------------------------------------------------------------------------
       # Global configuration
       # ---------------------------------------------------------------------------------------------------------
       discoverable: true             # If the server registers a mdns entry for the adapter
@@ -80,101 +63,77 @@ NetworkManager:
       scanNetworkChanges: true      # If true, the server will scan for new interfaces or disconnected interfaces
       scanInterval: 60000            # Time in milliseconds to scan for network changes
 
-        # ---------------------------------------------------------------------------------------------------------
-        # Global configuration for SSL
-        # ---------------------------------------------------------------------------------------------------------
-      security:
-        tls:
-          clientCertificateRequired: false
-          clientCertificateWanted: false
-            #-----------------------------------
-            # CRL Specific
-            # crlUrl: <URL TO CRL>
-            # crlInterval: <time in seconds to reload CRL>
-            #-----------------------------------
-
-          keyStore:
-            type: JKS
-            managerFactory: SunX509
-            path: my-keystore.jks
-            passphrase: password
-
-          trustStore:
-            type: JKS
-            path: my-truststore.jks
-            passphrase: password
-            managerFactory: SunX509
-
-        dtls:
-          clientCertificateRequired: false
-
-          keyStore:
-            type: JKS
-            managerFactory: SunX509
-            path: my-keystore.jks
-            passphrase: password
-
-          trustStore:
-            type: JKS
-            path: my-truststore.jks
-            passphrase: password
-            managerFactory: SunX509
 
     data:
 
-      - name: "MQTT Interface"
+      - name: "MQTT Interface on 1883"
         url: tcp://:::1883/
         protocol: mqtt
         auth: default
         selectorThreadCount: "{processors}/2"
 
-      - name: "ogws interface"
-        protocol: satellite
-        auth: anon
-        bridgeMode: false
-        url: satellite://localhost:8500/
-        httpRequestTimeoutSec: 30
-        pollInterval: 15
-        sharedSecret: "This is a shared secret to use"
-        maxInflightEventsPerDevice: 2
-        namespaceRoot: "/{deviceId}"
-        inboundNamespaceRoot: "/incoming/{deviceId}/{sin}/{min}"
-        outboundNamespaceRoot: "/outgoing/{deviceId}/#"
-        outboundBroadcast: "/inmarsat/broadcast"
-        baseUrl: "http://localhost:8085/api/v1.0"
-        remoteAuthConfig:
-          username: "ogws client id"
-          password: "ogws client secret"
+#
+# Chose 1 of the following:
+#
+# OrbComm can be used against the Modem Simulator
+# Inmarsat can be used against production
+#
 
-
-#      - name: "inmarsat IoT interface"
-#        auth: anon
+#      - name: "OrbComm OGWS interface"
 #        protocol: satellite
-#        url: satellite://localhost:8500/
-
-
-#        # Rest Server Config
-#        baseUrl: "http://localhost:8085/iotMessaging/v1"
-#        mailboxId: "mailbox-001"
-#        mailboxPassword: "mailbox-secret"
-
+#        auth: anon
+#        maxInflightEventsPerDevice: 2
+#
+#        # Timeouts
+#        httpRequestTimeoutSec: 30
+#        incomingMessagePollInterval: 10
+#        outgoingMessagePollInterval: 30
+#
+#        maxBufferSize: 4000
+#
+#        sharedSecret: "This is a shared secret to use"
+#        baseUrl: "http://localhost:8085/api/v1.0"
+#        compressionCutoffSize: 128
+#        # Namespace mapping
+#        commonInboundPublishRoot: "/{deviceId}/common/in/{sin}/{min}"
+#        commonOutboundPublishRoot: "/{deviceId}/common/out/#"
+#        mapsInboundPublishRoot: "/{deviceId}/maps/in"
+#        mapsOutboundPublishRoot: "/{deviceId}/maps/out/#"
+#        outboundBroadcast: "/inmarsat/broadcast"
+#
+#        # Specific Auth
 #        remoteAuthConfig:
 #          username: "ogws client id"
 #          password: "ogws client secret"
-        # Timeouts
+#
+#
+#
+#      - name: "inmarsat IoT interface"
+#        protocol: satellite
+#        auth: anon
+#        maxInflightEventsPerDevice: 2
+#
+#        # Timeouts
+#        httpRequestTimeoutSec: 30
 #        incomingMessagePollInterval: 10
 #        outgoingMessagePollInterval: 30
-#        httpRequestTimeoutSec: 30
-
-
-
-        # Maps message package config
-#        bridgeMode: false
+#
+#        maxBufferSize: 4000
+#
 #        sharedSecret: "This is a shared secret to use"
-#        maxInflightEventsPerDevice: 2
-
-        # Namespace mapping
- #       outboundNamespaceRoot: "/inmarsat/{deviceId}"
- #       outboundBroadcast: "/inmarsat/broadcast"
- #       namespaceRoot: "/{mailboxId}/{deviceId}/{sin}"
+#        baseUrl: "https://api.inmarsat.com/iotMessaging/v1"
+#        compressionCutoffSize: 128
+#        # Namespace mapping
+#        commonInboundPublishRoot: "/{deviceId}/common/in/{sin}/{min}"
+#        commonOutboundPublishRoot: "/{deviceId}/common/out/#"
+#        mapsInboundPublishRoot: "/{deviceId}/maps/in"
+#        mapsOutboundPublishRoot: "/{deviceId}/maps/out/#"
+#        outboundBroadcast: "/inmarsat/broadcast"
+#
+#        # Specific Auth
+#        mailboxId: "<mailbox - id>"
+#        mailboxPassword: "<mailbox password"
+#        remoteAuthConfig:
+#          username: "<username>"
+#          password: "<secrect>"
 
